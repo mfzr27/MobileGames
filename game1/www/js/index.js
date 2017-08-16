@@ -1,4 +1,4 @@
-var player, monster, cursors, txtScore, score;
+var player, monster, cursors, txtScore, score, startTime, currentTime;
 
 var game = new Phaser.Game(
   '100%',
@@ -18,6 +18,9 @@ function preload() {
 };
 
 function create() {
+  var startTime = new Date().getTime();
+  console.log(startTime);
+
   var music = game.sound.play('music');
   music.volume = 0.5;
   music.loopFull();
@@ -49,8 +52,11 @@ function create() {
 
   score = 0;
   var style = {font:'25px Arial', fill: '#bddb28'};
-  txtScore = game.add.text(10, 100, score.toString(), style);
+  txtScore = game.add.text(10, 10, score.toString(), style);
   txtScore.fixedToCamera = true;
+
+  timer = game.add.text(10, 600, score.toString(), style);
+  timer.fixedToCamera = true;
 
   cursors = game.input.keyboard.createCursorKeys();
 };
@@ -79,15 +85,16 @@ function update() {
 };
 
 function monsterHitHandler(playerObject, monsterObject) {
-  monsterObject.x = Math.random() * game.width;
-  monsterObject.y = Math.random() * game.height;
 
-  score++;
-  txtScore.setText(score.toString());
+    ping = game.sound.play('ping');
+    var monsterOrder = monsterObject.z;
 
-  game.sound.play('ping');
-  monsterObject.theName.destroy();
-  monster.remove(monsterObject);
+    if(monsterOrder == 0){
+    	monster.remove(monsterObject);
+    	monsterObject.theName.destroy();
+      score++;
+      txtScore.setText(score.toString());
+    }
 
-  console.log(monsterObject.theName);
-}
+    console.log();
+  }
